@@ -15,17 +15,17 @@ The project will also compare
 # Project Pipeline
 
 ## Phase 0: Setting up our Tools 
-- [] Create our detailed working github repository
-- [] Organize repository folder structure
-- [] 
-- []
-- []
+- [ ] Create our detailed working github repository
+- [ ] Organize repository folder structure
+- [ ] 
+- [ ]
+- [ ]
 
 ## Phase 1: Dataset requirements 
-- [] Discuss various project requirements among group members
-- [] Evaluate our requirements for the tattoo recognition training
-- [] Define the various requirements for subject/tattoo/person imagery
-- [] Document our dataset requirements
+- [ ] Discuss various project requirements among group members
+- [ ] Evaluate our requirements for the tattoo recognition training
+- [ ] Define the various requirements for subject/tattoo/person imagery
+- [ ] Document our dataset requirements
 
 ## Phase _: Prompt Dataset
 

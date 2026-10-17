@@ -1,0 +1,41 @@
+# Working SQLite database
+database/tattoo_dataset.db
+database/tattoo_dataset.db-shm
+database/tattoo_dataset.db-wal
+
+# Generated videos
+data/videos/baseline/*
+!data/videos/baseline/.gitkeep
+
+data/videos/proposed/*
+!data/videos/proposed/.gitkeep
+
+# Extracted images
+data/images/baseline/*
+!data/images/baseline/.gitkeep
+
+data/images/proposed/*
+!data/images/proposed/.gitkeep
+
+# Notebooks
+noteboooks/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Env
+venv/
+env/
+.env

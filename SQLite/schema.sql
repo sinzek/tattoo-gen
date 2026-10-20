@@ -6,6 +6,7 @@ PRAGMA foreign_keys = ON;
 -- ======================== DROP EXISTING TABLES ========================
 
 -- Drop tables in dependency order
+DROP TABLE IF EXISTS image_pairs;
 DROP TABLE IF EXISTS image;
 DROP TABLE IF EXISTS generation;
 DROP TABLE IF EXISTS prompt;
@@ -94,11 +95,16 @@ CREATE TABLE generation (
     prompt_id INTEGER NOT NULL,
     model_name TEXT NOT NULL,
     model_version TEXT NOT NULL,
-    generation_seed INTEGER NOT NULL,
+    generation_seed INTEGER,
     generation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     video_path TEXT NOT NULL UNIQUE,
+    quality_model TEXT,
+    quality_version TEXT,
+    quality_threshold REAL,
+    frame_interval REAL,
+    settings_json TEXT,
 
-    FOREIGN KEY (prompt_id) REFERENCES prompt(prompt_id)
+    FOREIGN KEY (prompt_id) REFERENCES prompt(prompt_id),
     UNIQUE (prompt_id, model_name, model_version, generation_seed)
 );
 
@@ -110,7 +116,24 @@ CREATE TABLE image (
     generation_id INTEGER NOT NULL,
     frame_number INTEGER NOT NULL,
     image_path TEXT NOT NULL UNIQUE,
-    quality_score REAL NOT NULL,
+    quality_score REAL,
 
     FOREIGN KEY (generation_id) REFERENCES generation(generation_id)
+);
+
+CREATE TABLE image_pairs (
+    pair_id INTEGER PRIMARY KEY,
+    generation_id INTEGER REFERENCES generation(generation_id),
+    image_id_1 INTEGER NOT NULL REFERENCES image(image_id),
+    image_id_2 INTEGER NOT NULL REFERENCES image(image_id),
+    same_tattoo INTEGER NOT NULL DEFAULT 1 CHECK (same_tattoo IN (0,1)),
+    consistency INTEGER CHECK (consistency BETWEEN 1 AND 5),
+    visibility INTEGER CHECK (visibility BETWEEN 1 AND 5),
+    prompt_adherence INTEGER CHECK (prompt_adherence BETWEEN 1 AND 5),
+    variation INTEGER CHECK (variation BETWEEN 1 AND 5),
+    total_score REAL,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (image_id_1 < image_id_2),
+    UNIQUE (image_id_1, image_id_2)
 );

@@ -1,0 +1,756 @@
+{
+  "format_version": 1,
+  "tables": {
+    "subject": [
+      {
+        "subject_id": 1,
+        "gender_presentation": "masculine",
+        "age_range": "18-29",
+        "skin_tone": "very_light",
+        "body_type": "athletic",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 2,
+        "gender_presentation": "feminine",
+        "age_range": "30-39",
+        "skin_tone": "light",
+        "body_type": "slim",
+        "upper_clothing": "short_sleeve",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 3,
+        "gender_presentation": "androgynous",
+        "age_range": "40-49",
+        "skin_tone": "medium",
+        "body_type": "average",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 4,
+        "gender_presentation": "masculine",
+        "age_range": "50-59",
+        "skin_tone": "tan",
+        "body_type": "large",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 5,
+        "gender_presentation": "feminine",
+        "age_range": "60+",
+        "skin_tone": "dark",
+        "body_type": "athletic",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 6,
+        "gender_presentation": "androgynous",
+        "age_range": "18-29",
+        "skin_tone": "very_dark",
+        "body_type": "slim",
+        "upper_clothing": "long_sleeve",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 7,
+        "gender_presentation": "masculine",
+        "age_range": "30-39",
+        "skin_tone": "very_light",
+        "body_type": "average",
+        "upper_clothing": "short_sleeve",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 8,
+        "gender_presentation": "feminine",
+        "age_range": "40-49",
+        "skin_tone": "light",
+        "body_type": "athletic",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 9,
+        "gender_presentation": "androgynous",
+        "age_range": "50-59",
+        "skin_tone": "medium",
+        "body_type": "large",
+        "upper_clothing": "long_sleeve",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 10,
+        "gender_presentation": "masculine",
+        "age_range": "60+",
+        "skin_tone": "tan",
+        "body_type": "slim",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 11,
+        "gender_presentation": "feminine",
+        "age_range": "18-29",
+        "skin_tone": "dark",
+        "body_type": "average",
+        "upper_clothing": "short_sleeve",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 12,
+        "gender_presentation": "androgynous",
+        "age_range": "30-39",
+        "skin_tone": "very_dark",
+        "body_type": "athletic",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 13,
+        "gender_presentation": "masculine",
+        "age_range": "40-49",
+        "skin_tone": "very_light",
+        "body_type": "large",
+        "upper_clothing": "long_sleeve",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 14,
+        "gender_presentation": "feminine",
+        "age_range": "50-59",
+        "skin_tone": "light",
+        "body_type": "slim",
+        "upper_clothing": "short_sleeve",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 15,
+        "gender_presentation": "androgynous",
+        "age_range": "60+",
+        "skin_tone": "medium",
+        "body_type": "average",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 16,
+        "gender_presentation": "masculine",
+        "age_range": "18-29",
+        "skin_tone": "tan",
+        "body_type": "athletic",
+        "upper_clothing": "long_sleeve",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 17,
+        "gender_presentation": "feminine",
+        "age_range": "30-39",
+        "skin_tone": "dark",
+        "body_type": "large",
+        "upper_clothing": "short_sleeve",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 18,
+        "gender_presentation": "androgynous",
+        "age_range": "40-49",
+        "skin_tone": "very_dark",
+        "body_type": "slim",
+        "upper_clothing": "long_sleeve",
+        "lower_clothing": "pants"
+      },
+      {
+        "subject_id": 19,
+        "gender_presentation": "masculine",
+        "age_range": "50-59",
+        "skin_tone": "very_light",
+        "body_type": "average",
+        "upper_clothing": "tank_top",
+        "lower_clothing": "shorts"
+      },
+      {
+        "subject_id": 20,
+        "gender_presentation": "feminine",
+        "age_range": "60+",
+        "skin_tone": "light",
+        "body_type": "athletic",
+        "upper_clothing": "short_sleeve",
+        "lower_clothing": "pants"
+      }
+    ],
+    "tattoo": [
+      {
+        "tattoo_id": 1,
+        "body_location": "upper_arm",
+        "style": "traditional",
+        "motif": "rose",
+        "color_mode": "color",
+        "size": "medium",
+        "tattoo_age": "fresh"
+      },
+      {
+        "tattoo_id": 2,
+        "body_location": "forearm",
+        "style": "realism",
+        "motif": "wolf",
+        "color_mode": "monochrome",
+        "size": "large",
+        "tattoo_age": "healed"
+      },
+      {
+        "tattoo_id": 3,
+        "body_location": "shoulder",
+        "style": "geometric",
+        "motif": "mandala",
+        "color_mode": "color",
+        "size": "small",
+        "tattoo_age": "aged"
+      },
+      {
+        "tattoo_id": 4,
+        "body_location": "chest",
+        "style": "linework",
+        "motif": "snake",
+        "color_mode": "monochrome",
+        "size": "medium",
+        "tattoo_age": "fresh"
+      },
+      {
+        "tattoo_id": 5,
+        "body_location": "back",
+        "style": "blackwork",
+        "motif": "raven",
+        "color_mode": "monochrome",
+        "size": "large",
+        "tattoo_age": "healed"
+      },
+      {
+        "tattoo_id": 6,
+        "body_location": "thigh",
+        "style": "watercolor",
+        "motif": "koi fish",
+        "color_mode": "color",
+        "size": "small",
+        "tattoo_age": "aged"
+      },
+      {
+        "tattoo_id": 7,
+        "body_location": "calf",
+        "style": "traditional",
+        "motif": "compass",
+        "color_mode": "color",
+        "size": "medium",
+        "tattoo_age": "fresh"
+      },
+      {
+        "tattoo_id": 8,
+        "body_location": "upper_arm",
+        "style": "realism",
+        "motif": "lion",
+        "color_mode": "monochrome",
+        "size": "large",
+        "tattoo_age": "healed"
+      },
+      {
+        "tattoo_id": 9,
+        "body_location": "forearm",
+        "style": "geometric",
+        "motif": "interlocking triangles",
+        "color_mode": "color",
+        "size": "small",
+        "tattoo_age": "aged"
+      },
+      {
+        "tattoo_id": 10,
+        "body_location": "shoulder",
+        "style": "linework",
+        "motif": "mountain range",
+        "color_mode": "monochrome",
+        "size": "medium",
+        "tattoo_age": "fresh"
+      },
+      {
+        "tattoo_id": 11,
+        "body_location": "chest",
+        "style": "blackwork",
+        "motif": "phoenix",
+        "color_mode": "monochrome",
+        "size": "large",
+        "tattoo_age": "healed"
+      },
+      {
+        "tattoo_id": 12,
+        "body_location": "back",
+        "style": "watercolor",
+        "motif": "hummingbird",
+        "color_mode": "color",
+        "size": "small",
+        "tattoo_age": "aged"
+      },
+      {
+        "tattoo_id": 13,
+        "body_location": "thigh",
+        "style": "traditional",
+        "motif": "eagle",
+        "color_mode": "color",
+        "size": "medium",
+        "tattoo_age": "fresh"
+      },
+      {
+        "tattoo_id": 14,
+        "body_location": "calf",
+        "style": "realism",
+        "motif": "owl",
+        "color_mode": "monochrome",
+        "size": "large",
+        "tattoo_age": "healed"
+      },
+      {
+        "tattoo_id": 15,
+        "body_location": "upper_arm",
+        "style": "geometric",
+        "motif": "sacred geometry pattern",
+        "color_mode": "color",
+        "size": "small",
+        "tattoo_age": "aged"
+      },
+      {
+        "tattoo_id": 16,
+        "body_location": "forearm",
+        "style": "linework",
+        "motif": "wildflowers",
+        "color_mode": "monochrome",
+        "size": "medium",
+        "tattoo_age": "fresh"
+      },
+      {
+        "tattoo_id": 17,
+        "body_location": "shoulder",
+        "style": "blackwork",
+        "motif": "dragon",
+        "color_mode": "monochrome",
+        "size": "large",
+        "tattoo_age": "healed"
+      },
+      {
+        "tattoo_id": 18,
+        "body_location": "chest",
+        "style": "watercolor",
+        "motif": "jellyfish",
+        "color_mode": "color",
+        "size": "small",
+        "tattoo_age": "aged"
+      },
+      {
+        "tattoo_id": 19,
+        "body_location": "back",
+        "style": "traditional",
+        "motif": "dagger and peony",
+        "color_mode": "color",
+        "size": "medium",
+        "tattoo_age": "fresh"
+      },
+      {
+        "tattoo_id": 20,
+        "body_location": "thigh",
+        "style": "realism",
+        "motif": "tiger",
+        "color_mode": "monochrome",
+        "size": "large",
+        "tattoo_age": "healed"
+      }
+    ],
+    "scene": [
+      {
+        "scene_id": 1,
+        "pose": "standing",
+        "camera_distance": "close_up",
+        "camera_angle": "side",
+        "lighting": "bright",
+        "environment": "studio",
+        "occlusion": "none",
+        "motion": "stationary",
+        "focus": "tattoo",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 2,
+        "pose": "sitting",
+        "camera_distance": "medium",
+        "camera_angle": "front",
+        "lighting": "normal",
+        "environment": "indoor",
+        "occlusion": "partial",
+        "motion": "limb_movement",
+        "focus": "subject",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 3,
+        "pose": "walking",
+        "camera_distance": "full_body",
+        "camera_angle": "oblique",
+        "lighting": "dim",
+        "environment": "outdoor",
+        "occlusion": "none",
+        "motion": "walking",
+        "focus": "subject",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 4,
+        "pose": "standing",
+        "camera_distance": "medium",
+        "camera_angle": "front",
+        "lighting": "bright",
+        "environment": "studio",
+        "occlusion": "partial",
+        "motion": "body_rotation",
+        "focus": "tattoo",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 5,
+        "pose": "sitting",
+        "camera_distance": "close_up",
+        "camera_angle": "back",
+        "lighting": "normal",
+        "environment": "indoor",
+        "occlusion": "none",
+        "motion": "stationary",
+        "focus": "tattoo",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 6,
+        "pose": "walking",
+        "camera_distance": "full_body",
+        "camera_angle": "side",
+        "lighting": "dim",
+        "environment": "outdoor",
+        "occlusion": "partial",
+        "motion": "walking",
+        "focus": "subject",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 7,
+        "pose": "standing",
+        "camera_distance": "medium",
+        "camera_angle": "oblique",
+        "lighting": "bright",
+        "environment": "studio",
+        "occlusion": "none",
+        "motion": "limb_movement",
+        "focus": "tattoo",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 8,
+        "pose": "sitting",
+        "camera_distance": "close_up",
+        "camera_angle": "side",
+        "lighting": "normal",
+        "environment": "indoor",
+        "occlusion": "partial",
+        "motion": "stationary",
+        "focus": "tattoo",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 9,
+        "pose": "walking",
+        "camera_distance": "full_body",
+        "camera_angle": "front",
+        "lighting": "dim",
+        "environment": "outdoor",
+        "occlusion": "none",
+        "motion": "walking",
+        "focus": "subject",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 10,
+        "pose": "standing",
+        "camera_distance": "close_up",
+        "camera_angle": "oblique",
+        "lighting": "bright",
+        "environment": "studio",
+        "occlusion": "partial",
+        "motion": "body_rotation",
+        "focus": "tattoo",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 11,
+        "pose": "sitting",
+        "camera_distance": "medium",
+        "camera_angle": "front",
+        "lighting": "normal",
+        "environment": "indoor",
+        "occlusion": "none",
+        "motion": "stationary",
+        "focus": "tattoo",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 12,
+        "pose": "walking",
+        "camera_distance": "full_body",
+        "camera_angle": "back",
+        "lighting": "dim",
+        "environment": "outdoor",
+        "occlusion": "partial",
+        "motion": "walking",
+        "focus": "subject",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 13,
+        "pose": "standing",
+        "camera_distance": "close_up",
+        "camera_angle": "side",
+        "lighting": "bright",
+        "environment": "studio",
+        "occlusion": "none",
+        "motion": "limb_movement",
+        "focus": "tattoo",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 14,
+        "pose": "sitting",
+        "camera_distance": "medium",
+        "camera_angle": "oblique",
+        "lighting": "normal",
+        "environment": "indoor",
+        "occlusion": "partial",
+        "motion": "stationary",
+        "focus": "subject",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 15,
+        "pose": "walking",
+        "camera_distance": "full_body",
+        "camera_angle": "front",
+        "lighting": "dim",
+        "environment": "outdoor",
+        "occlusion": "none",
+        "motion": "walking",
+        "focus": "subject",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 16,
+        "pose": "standing",
+        "camera_distance": "close_up",
+        "camera_angle": "side",
+        "lighting": "bright",
+        "environment": "studio",
+        "occlusion": "partial",
+        "motion": "body_rotation",
+        "focus": "tattoo",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 17,
+        "pose": "sitting",
+        "camera_distance": "medium",
+        "camera_angle": "oblique",
+        "lighting": "normal",
+        "environment": "indoor",
+        "occlusion": "none",
+        "motion": "limb_movement",
+        "focus": "tattoo",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 18,
+        "pose": "walking",
+        "camera_distance": "full_body",
+        "camera_angle": "front",
+        "lighting": "dim",
+        "environment": "outdoor",
+        "occlusion": "partial",
+        "motion": "walking",
+        "focus": "subject",
+        "visibility": "partial"
+      },
+      {
+        "scene_id": 19,
+        "pose": "standing",
+        "camera_distance": "close_up",
+        "camera_angle": "back",
+        "lighting": "bright",
+        "environment": "studio",
+        "occlusion": "none",
+        "motion": "body_rotation",
+        "focus": "tattoo",
+        "visibility": "full"
+      },
+      {
+        "scene_id": 20,
+        "pose": "sitting",
+        "camera_distance": "medium",
+        "camera_angle": "back",
+        "lighting": "normal",
+        "environment": "indoor",
+        "occlusion": "partial",
+        "motion": "limb_movement",
+        "focus": "subject",
+        "visibility": "partial"
+      }
+    ],
+    "prompt": [
+      {
+        "prompt_id": 1,
+        "subject_id": 1,
+        "tattoo_id": 1,
+        "scene_id": 1,
+        "prompt_text": "Generate a video of a masculine-presenting young adult with very light skin and an athletic build, wearing a tank top and shorts. A fresh, medium-sized, full-color traditional rose tattoo is located on the upper arm. The subject is standing still in a brightly lit studio while the camera captures a close-up side view focused on the fully visible tattoo."
+      },
+      {
+        "prompt_id": 2,
+        "subject_id": 2,
+        "tattoo_id": 2,
+        "scene_id": 2,
+        "prompt_text": "Generate a video of a feminine-presenting adult with light skin and a slim build, wearing a short-sleeved shirt and pants. A healed, large, monochrome realism tattoo of a wolf is located on the forearm. The subject is sitting indoors and gently moving the tattooed arm while the camera records a medium-distance front view. Keep part of the tattoo naturally obstructed but identifiable, with focus primarily on the subject."
+      },
+      {
+        "prompt_id": 3,
+        "subject_id": 3,
+        "tattoo_id": 3,
+        "scene_id": 3,
+        "prompt_text": "Generate a video of an androgynous-presenting adult with medium skin and an average build, wearing a tank top and shorts. A small, aged, full-color geometric mandala tattoo is located on the shoulder. The subject walks naturally outdoors in dim lighting while filmed from a full-body oblique angle. Keep the tattoo unobstructed and entirely visible, with focus primarily on the overall subject."
+      },
+      {
+        "prompt_id": 4,
+        "subject_id": 4,
+        "tattoo_id": 4,
+        "scene_id": 4,
+        "prompt_text": "Generate a video of a masculine-presenting older adult with tan skin and a large build, wearing a tank top and pants. A fresh, medium-sized, monochrome linework snake tattoo is located on the visible upper chest. In a brightly lit studio, the standing subject gradually rotates their torso while the camera records a medium-distance front view focused on the tattoo. Keep the tattoo partially obstructed but identifiable."
+      },
+      {
+        "prompt_id": 5,
+        "subject_id": 5,
+        "tattoo_id": 5,
+        "scene_id": 5,
+        "prompt_text": "Generate a video of a feminine-presenting senior adult with dark skin and an athletic build, wearing a tank top and shorts. A healed, large, monochrome blackwork raven tattoo is located on the exposed upper back. The subject sits still indoors while the camera captures an unobstructed close-up from behind, keeping the entire tattoo visible and in focus."
+      },
+      {
+        "prompt_id": 6,
+        "subject_id": 6,
+        "tattoo_id": 6,
+        "scene_id": 6,
+        "prompt_text": "Generate a video of an androgynous-presenting young adult with very dark skin and a slim build, wearing a long-sleeved shirt and shorts. A small, aged watercolor koi fish tattoo in color is located on the thigh. The subject walks naturally outdoors in dim lighting while filmed from a full-body side view. Keep the tattoo partially obstructed but still identifiable, with focus on the overall subject."
+      },
+      {
+        "prompt_id": 7,
+        "subject_id": 7,
+        "tattoo_id": 7,
+        "scene_id": 7,
+        "prompt_text": "Generate a video of a masculine-presenting adult with very light skin and an average build, wearing a short-sleeved shirt and shorts. A fresh, medium-sized, full-color traditional compass tattoo is located on the calf. In a brightly lit studio, the standing subject slowly moves the tattooed leg while the camera records an unobstructed medium-distance oblique view focused on the fully visible tattoo."
+      },
+      {
+        "prompt_id": 8,
+        "subject_id": 8,
+        "tattoo_id": 8,
+        "scene_id": 8,
+        "prompt_text": "Generate a video of a feminine-presenting adult with light skin and an athletic build, wearing a tank top and pants. A healed, large, monochrome realism tattoo of a lion is located on the upper arm. The subject sits still indoors while the camera captures a close-up side view focused on the tattoo. Keep part of the design naturally obstructed while leaving it identifiable."
+      },
+      {
+        "prompt_id": 9,
+        "subject_id": 9,
+        "tattoo_id": 9,
+        "scene_id": 9,
+        "prompt_text": "Generate a video of an androgynous-presenting older adult with medium skin and a large build, wearing a long-sleeved shirt with the tattooed sleeve rolled up and shorts. A small, aged, full-color geometric tattoo of interlocking triangles is located on the forearm. The subject walks naturally outdoors in dim lighting while filmed from a full-body front view. Keep the tattoo unobstructed and entirely visible, with focus on the overall subject."
+      },
+      {
+        "prompt_id": 10,
+        "subject_id": 10,
+        "tattoo_id": 10,
+        "scene_id": 10,
+        "prompt_text": "Generate a video of a masculine-presenting senior adult with tan skin and a slim build, wearing a tank top and pants. A fresh, medium-sized, monochrome linework tattoo of a mountain range is located on the shoulder. In a brightly lit studio, the standing subject slowly rotates their body while the camera captures a close-up oblique view focused on the tattoo. Keep the design partially obstructed but identifiable."
+      },
+      {
+        "prompt_id": 11,
+        "subject_id": 11,
+        "tattoo_id": 11,
+        "scene_id": 11,
+        "prompt_text": "Generate a video of a feminine-presenting young adult with dark skin and an average build, wearing a short-sleeved shirt positioned to expose the upper chest and shorts. A healed, large, monochrome blackwork phoenix tattoo is located on the chest. The subject sits still indoors while the camera records an unobstructed medium-distance front view focused on the fully visible tattoo."
+      },
+      {
+        "prompt_id": 12,
+        "subject_id": 12,
+        "tattoo_id": 12,
+        "scene_id": 12,
+        "prompt_text": "Generate a video of an androgynous-presenting adult with very dark skin and an athletic build, wearing a tank top and pants. A small, aged watercolor hummingbird tattoo in color is located on the exposed upper back. The subject walks naturally outdoors in dim lighting while filmed from behind at full-body distance. Keep part of the tattoo obstructed but identifiable, with focus on the overall subject."
+      },
+      {
+        "prompt_id": 13,
+        "subject_id": 13,
+        "tattoo_id": 13,
+        "scene_id": 13,
+        "prompt_text": "Generate a video of a masculine-presenting adult with very light skin and a large build, wearing a long-sleeved shirt and shorts. A fresh, medium-sized, full-color traditional eagle tattoo is located on the thigh. In a brightly lit studio, the standing subject gently moves the tattooed leg while the camera captures an unobstructed close-up side view focused on the fully visible tattoo."
+      },
+      {
+        "prompt_id": 14,
+        "subject_id": 14,
+        "tattoo_id": 14,
+        "scene_id": 14,
+        "prompt_text": "Generate a video of a feminine-presenting older adult with light skin and a slim build, wearing a short-sleeved shirt and shorts. A healed, large, monochrome realism tattoo of an owl is located on the calf. The subject sits still indoors while the camera records a medium-distance oblique view. Keep the tattoo partially obstructed but identifiable, with focus primarily on the overall subject."
+      },
+      {
+        "prompt_id": 15,
+        "subject_id": 15,
+        "tattoo_id": 15,
+        "scene_id": 15,
+        "prompt_text": "Generate a video of an androgynous-presenting senior adult with medium skin and an average build, wearing a tank top and pants. A small, aged, full-color sacred geometry tattoo is located on the upper arm. The subject walks naturally outdoors in dim lighting while filmed from a full-body front view. Keep the tattoo unobstructed and entirely visible, with focus on the overall subject."
+      },
+      {
+        "prompt_id": 16,
+        "subject_id": 16,
+        "tattoo_id": 16,
+        "scene_id": 16,
+        "prompt_text": "Generate a video of a masculine-presenting young adult with tan skin and an athletic build, wearing a long-sleeved shirt with the tattooed sleeve rolled up and shorts. A fresh, medium-sized, monochrome linework wildflower tattoo is located on the forearm. In a brightly lit studio, the standing subject slowly rotates their body while the camera captures a close-up side view focused on the tattoo. Keep the design partially obstructed but identifiable."
+      },
+      {
+        "prompt_id": 17,
+        "subject_id": 17,
+        "tattoo_id": 17,
+        "scene_id": 17,
+        "prompt_text": "Generate a video of a feminine-presenting adult with dark skin and a large build, wearing a short-sleeved shirt positioned to expose the tattooed shoulder and pants. A healed, large, monochrome blackwork dragon tattoo is located on the shoulder. The subject sits indoors and gently moves the tattooed arm while the camera records an unobstructed medium-distance oblique view focused on the fully visible tattoo."
+      },
+      {
+        "prompt_id": 18,
+        "subject_id": 18,
+        "tattoo_id": 18,
+        "scene_id": 18,
+        "prompt_text": "Generate a video of an androgynous-presenting adult with very dark skin and a slim build, wearing a long-sleeved shirt positioned to expose part of the upper chest and pants. A small, aged watercolor jellyfish tattoo in color is located on the chest. The subject walks naturally outdoors in dim lighting while filmed from a full-body front view. Keep the tattoo partially obstructed but identifiable, with focus on the overall subject."
+      },
+      {
+        "prompt_id": 19,
+        "subject_id": 19,
+        "tattoo_id": 19,
+        "scene_id": 19,
+        "prompt_text": "Generate a video of a masculine-presenting older adult with very light skin and an average build, wearing a tank top and shorts. A fresh, medium-sized, full-color traditional dagger-and-peony tattoo is located on the exposed upper back. In a brightly lit studio, the standing subject slowly rotates their body while the camera captures an unobstructed close-up from behind, keeping the entire tattoo visible and in focus."
+      },
+      {
+        "prompt_id": 20,
+        "subject_id": 20,
+        "tattoo_id": 20,
+        "scene_id": 20,
+        "prompt_text": "Generate a video of a feminine-presenting senior adult with light skin and an athletic build, wearing a short-sleeved shirt and pants adjusted to expose part of the tattooed thigh. A healed, large, monochrome realism tattoo of a tiger is located on the thigh. The subject sits indoors and gently moves the tattooed leg while the camera records a medium-distance rear view. Keep the tattoo partially obstructed but identifiable, with focus primarily on the overall subject."
+      }
+    ],
+    "generation": [],
+    "image": [],
+    "image_pairs": []
+  }
+}

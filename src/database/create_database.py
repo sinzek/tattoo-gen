@@ -1,4 +1,4 @@
-# Run this file from the repo root to create the tattoo_gen.db file via bash: python src/database/create_database.py
+# Run from the repository root: python src/create_database.py
 
 import csv
 import sqlite3
@@ -232,23 +232,115 @@ def load_prompts(connection, allowed_values):
     return inserted_count
 
 
-def create_database():
+TABLES = ("subject", "tattoo", "scene", "prompt", "generation", "image", "image_pairs")
+METADATA_PATH = ROOT_DIRECTORY / "data/metadata/database_records.json"
+
+
+def connect():
+    if not DATABASE_PATH.is_file():
+        raise ValueError("Run python src/create_database.py first.")
     connection = sqlite3.connect(DATABASE_PATH)
-
-    # Enable foreign-key enforcement
-    connection.execute("PRAGMA foreign_keys = ON")
-
-    execute_sql_file(connection, SCHEMA_PATH)
-    execute_sql_file(connection, ALLOWED_VALUES_PATH)
-
-    allowed_values = load_allowed_values(connection)
-    inserted_count = load_prompts(connection, allowed_values)
-
-    connection.commit()
-    connection.close()
-
-    print(f"Prompts inserted: {inserted_count}")
+    connection.row_factory = sqlite3.Row
+    connection.execute("PRAGMA foreign_keys=ON")
+    return connection
 
 
-if __name__ == "__main__":
-    create_database()
+def save_records(connection):
+    import json
+    import os
+    import tempfile
+    records = {}
+    for table in TABLES:
+        exists = connection.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone()
+        if not exists and table == "image_pairs":
+            records[table] = []
+            continue
+        cursor = connection.execute(f"SELECT * FROM {table}")
+        columns = [item[0] for item in cursor.description]
+        records[table] = [dict(zip(columns,row)) for row in cursor.fetchall()]
+    METADATA_PATH.parent.mkdir(parents=True,exist_ok=True)
+    handle, temporary = tempfile.mkstemp(dir=METADATA_PATH.parent,suffix=".tmp")
+    try:
+        with os.fdopen(handle,"w",encoding="utf-8") as stream:
+            json.dump({"format_version":1,"tables":records},stream,indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary,METADATA_PATH)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def restore_records(connection):
+    import json
+    data=json.loads(METADATA_PATH.read_text(encoding="utf-8"))
+    if data.get("format_version") not in (1,2) or not isinstance(data.get("tables"),dict):
+        raise ValueError("Invalid metadata file.")
+    records=data["tables"]
+    if not set(TABLES[:-1]).issubset(records):
+        raise ValueError("Required metadata tables are missing.")
+    # Also accepts snapshots from the earlier, larger implementation.
+    for table in TABLES:
+        allowed={row[1] for row in connection.execute(f"PRAGMA table_info({table})")}
+        rows=records.get(table,[])
+        if not isinstance(rows,list):
+            raise ValueError(f"Invalid records for {table}.")
+        for row in rows:
+            if not isinstance(row,dict):
+                raise ValueError(f"Invalid row for {table}.")
+            values={key:value for key,value in row.items() if key in allowed}
+            if not values:
+                raise ValueError(f"Empty row for {table}.")
+            columns=", ".join(values)
+            placeholders=", ".join("?" for _ in values)
+            connection.execute(f"INSERT INTO {table} ({columns}) VALUES ({placeholders})",list(values.values()))
+
+
+def create_database():
+    import os
+    import tempfile
+    if DATABASE_PATH.exists():
+        old = sqlite3.connect(DATABASE_PATH)
+        try:
+            save_records(old)
+        finally:
+            old.close()
+    DATABASE_PATH.parent.mkdir(parents=True,exist_ok=True)
+    handle, temporary=tempfile.mkstemp(dir=DATABASE_PATH.parent,suffix=".db")
+    os.close(handle)
+    connection=sqlite3.connect(temporary)
+    try:
+        execute_sql_file(connection,SCHEMA_PATH)
+        execute_sql_file(connection,ALLOWED_VALUES_PATH)
+        if METADATA_PATH.exists():
+            restore_records(connection)
+            print("Reloaded saved records.")
+        else:
+            print("Prompts inserted:",load_prompts(connection,load_allowed_values(connection)))
+        if connection.execute("PRAGMA foreign_key_check").fetchall():
+            raise ValueError("Foreign-key validation failed.")
+        connection.commit()
+        save_records(connection)
+        connection.close()
+        os.replace(temporary,DATABASE_PATH)
+    finally:
+        connection.close()
+        Path(temporary).unlink(missing_ok=True)
+    print("Database ready:",DATABASE_PATH)
+
+
+if __name__=="__main__":
+    import sys
+    try:
+        if sys.argv[1:]==["--export"]:
+            connection=connect()
+            try:
+                save_records(connection)
+                print("Saved:",METADATA_PATH)
+            finally:
+                connection.close()
+        elif sys.argv[1:]:
+            raise ValueError("Usage: python src/create_database.py [--export]")
+        else:
+            create_database()
+    except (ValueError,OSError,sqlite3.Error) as error:
+        raise SystemExit(str(error))

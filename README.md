@@ -1,57 +1,61 @@
-<<<<<<< Updated upstream
-# tattoo-gen
-COSC 4394 - Physical Computing for Image Analytics
-=======
 # Synthetic Tattoo Generation
-  University of Houston - Computational Biomedicine Lab
-  Research Project for Synthetic Tattoo Image Generation for Tattoo Recognition
 
-# Project Overview 
-This project will investigate the usage of text-to-video generation models to create synthetic tattoo images that can be used to develop and train tattoo-recognition systems.
+University of Houston — Computational Biomedicine Lab
 
-Our approach will explore whether or not using text-to-video generation can produce a consistent amount of frames depicting the same synthetic individual and too; to find the most suitable frames that can be organized and selected into image pairs for use in tattoo-recognition research.
-
-The project will also compare 
-1) A baseline text-to-video generation method
-  VS
-2) A modified generation method
+This research project evaluates text-to-video generation for synthetic tattoo-recognition imagery. It compares baseline and proposed generation methods, extracts video frames, scores perceptual quality with MUSIQ, and records manual reviews of candidate image pairs.
 
 ## Setup
 
-Use a dedicated Python 3.11/3.12 environment. From the repository root:
+Use a dedicated Python 3.11 or 3.12 environment. From the repository root:
 
 ```bash
 python -m pip install -r requirements.txt
-python src/create_database.py
-python src/process_video.py
+export PYTHONPATH=src
+python -m database.create_database init
 ```
 
-PyTorch dependencies can be large. For a CPU-only Windows/Linux install, first run:
+Initialization imports [prompts.csv](data/metadata/prompts.csv), the sole prompt source, containing 50 prompts. It never restores the old snapshot implicitly and refuses to overwrite an existing database.
+
+Existing databases: run `python -m database.create_database migrate`, which creates a `.db.bak` backup and rebuilds the schema while preserving records. Then run `python -m database.create_database import-prompts` to import the current CSV. Prompts already used by a generation cannot change; keep their original records for provenance. Migration refuses to overwrite an existing backup. To restore [database_records.json](data/metadata/database_records.json) into an absent database, use `python -m database.create_database restore`. Export the current database using `python -m database.create_database export`.
+
+CSV imports validate headers, IDs, required text, and allowed values, and report row numbers for invalid data. They do not validate incompatible attribute combinations.
+
+For CPU-only Windows/Linux installations, install PyTorch first:
 
 ```bash
 python -m pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cpu
+python -m pip install -r requirements.txt
 ```
 
-Then install requirements.txt. Headless OpenCV is intentional: images are reviewed in a browser gallery. First MUSIQ use downloads pretrained weights. Scoring runs on CPU and can take time. No model training occurs.
+On Windows PowerShell, set `$env:PYTHONPATH = "src"` instead of using `export`.
 
-# Project Pipeline
+## Processing and resuming
 
-## Phase 0: Setting up our Tools 
-- [ ] Create our detailed working github repository
-- [ ] Organize repository folder structure
-- [ ] 
-- [ ]
-- [ ]
+Set a finite `quality_threshold` and document its pilot-based rationale in [config/evaluation.json](config/evaluation.json). Choose an experiment name, frame interval, and criterion weights before processing. Once scored, that experiment name requires exactly the same configuration across videos. Use separate named configs for pilot and final evaluation.
 
-## Phase 1: Dataset requirements 
-- [ ] Discuss various project requirements among group members
-- [ ] Evaluate our requirements for the tattoo recognition training
-- [ ] Define the various requirements for subject/tattoo/person imagery
-- [ ] Document our dataset requirements
+```bash
+python -m database.process_video run --config config/evaluation.json
+# Resume a registered generation:
+python -m database.process_video run --generation-id 1 --config config/evaluation.json
+```
 
-## Phase _: Prompt Dataset
+Individual stages are also available:
 
-## Phase _: Literature Review: Text-to-Video
+```bash
+python -m database.process_video register
+python -m database.process_video extract --generation-id 1
+python -m database.process_video score --generation-id 1
+python -m database.process_video review --scoring-run-id 1
+```
 
-## Phase _: Literature Review: Image Quality
->>>>>>> Stashed changes
+Registration copies a manually generated video into the baseline/proposed directory and records its exact prompt, model, optional seed, and settings. Extraction is atomic: failed extraction removes new frames and rolls back its records. Existing extracted frames are reused by `run`. Scoring downloads MUSIQ weights on first use and records checkpoint/runtime information, image hashes, and scores in a separate scoring run. Review uses that run's saved threshold and weights, verifies image hashes, and saves every completed review immediately, including nonmatching pairs. Repeating review resumes unfinished work. The winner is selected only after all candidate pairs have been reviewed; ties use image IDs. Selected pairs reference original images; files are not copied.
+
+Images are inspected in an external image viewer. There is no browser gallery or automatic tattoo recognition. See [the scoring rubric](docs/SCORING_RUBRIC.md) for rating guidance.
+
+## Tests
+
+The standard-library tests do not require PyTorch, OpenCV, model downloads, or videos:
+
+```bash
+PYTHONPATH=src python -m unittest discover -s tests -v
+```

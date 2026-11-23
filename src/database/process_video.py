@@ -1,7 +1,5 @@
-# Registers a manually generated video, extracts and scores frames with MUSIQ,
-# filters frames by a quality threshold, and saves the highest-rated image pair
-# based on manual scoring. Images stay in the baseline/proposed folders,
-# and database records are saved to JSON for reloading.
+# Register videos, extract frames, score with MUSIQ, and resume pair reviews.
+# Each scoring run freezes its configuration, checkpoint provenance, and image hashes.
 
 import itertools
 import json
@@ -11,9 +9,10 @@ import sqlite3
 import uuid
 from pathlib import Path
 
-import cv2
-import pyiqa
-import torch
+import hashlib
+import platform
+import argparse
+from importlib.metadata import version
 
 from database.create_database import ROOT_DIRECTORY as ROOT, connect, save_records
 
@@ -96,7 +95,8 @@ def register_video(db):
     return generation_id, destination, method
 
 
-def extract_and_score(db, generation_id, video, method, interval, metric):
+def extract_frames(db, generation_id, video, method, interval):
+    import cv2
     folder = (
         ROOT / "data/images" / method / f"generation_{generation_id:03d}"
     )
@@ -127,21 +127,17 @@ def extract_and_score(db, generation_id, video, method, interval, metric):
                     if not cv2.imwrite(str(path), frame):
                         raise ValueError("Could not save frame.")
 
-                    with torch.inference_mode():
-                        score = float(metric(str(path)).item())
-                    if not math.isfinite(score):
-                        raise ValueError("Invalid quality score.")
 
                     db.execute(
                         """INSERT INTO image
-                           (generation_id, frame_number, image_path, quality_score)
-                           VALUES (?, ?, ?, ?)""",
+                           (generation_id, frame_number, image_path)
+                           VALUES (?, ?, ?)""",
                         (
                             generation_id, frame_number,
-                            path.relative_to(ROOT).as_posix(), score,
+                            path.relative_to(ROOT).as_posix(),
                         ),
                     )
-                    print(f"Frame {frame_number}: {score:.2f}")
+                    print(f"Extracted frame {frame_number}")
 
                 frame_number += 1
 
@@ -151,13 +147,7 @@ def extract_and_score(db, generation_id, video, method, interval, metric):
             if math.isfinite(expected) and expected > frame_number + 1:
                 raise ValueError("Video decoding stopped early.")
 
-            from importlib.metadata import version
-            db.execute(
-                """UPDATE generation
-                   SET quality_model = ?, quality_version = ?, frame_interval = ?
-                   WHERE generation_id = ?""",
-                ("musiq", version("pyiqa"), interval, generation_id),
-            )
+            db.execute("UPDATE generation SET frame_interval=? WHERE generation_id=?", (interval,generation_id))
 
     except BaseException:
         for path in written:
@@ -170,99 +160,173 @@ def extract_and_score(db, generation_id, video, method, interval, metric):
     print("Images saved in:", folder)
 
 
-def select_pair(db, generation_id, threshold):
-    frames = db.execute(
-        """SELECT * FROM image
-           WHERE generation_id = ? AND quality_score >= ?
-           ORDER BY image_id""",
-        (generation_id, threshold),
-    ).fetchall()
+CRITERIA = ("consistency", "visibility", "prompt_adherence", "variation")
 
-    if len(frames) < 2:
-        print("Fewer than two frames passed. No pair selected.")
-        return
 
-    print(f"\n{len(frames)} frames passed:")
+def digest(path):
+    with open(path, "rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def load_config(path):
+    config = json.loads(Path(path).read_text())
+    for key in ("quality_threshold", "frame_interval"):
+        value = config.get(key)
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+            raise ValueError(f"Set a finite {key} in the experiment config before processing.")
+    if config["frame_interval"] <= 0:
+        raise ValueError("frame_interval must be positive.")
+    if config.get("metric") != "musiq" or config.get("device") != "cpu":
+        raise ValueError("Supported metric/device: musiq/cpu.")
+    weights = config.get("weights", {})
+    if set(weights) != set(CRITERIA) or any(isinstance(v, bool) or not isinstance(v, (int,float)) or not math.isfinite(v) or v < 0 for v in weights.values()) or sum(weights.values()) <= 0:
+        raise ValueError("Provide nonnegative criterion weights with a positive sum.")
+    if not config.get("experiment_name") or not str(config.get("threshold_rationale", "")).strip():
+        raise ValueError("Experiment name and threshold rationale are required.")
+    return config
+
+
+def freeze_config(db, config):
+    # A named experiment must retain its exact configuration across generations.
+    for row in db.execute("SELECT config_json FROM scoring_run"):
+        old = json.loads(row[0])
+        if old.get("experiment_name") == config["experiment_name"] and old != config:
+            raise ValueError("This experiment already has a different frozen config. Use a new experiment name.")
+
+
+def generation_info(db, generation_id):
+    row = db.execute("SELECT * FROM generation WHERE generation_id=?", (generation_id,)).fetchone()
+    if row is None:
+        raise ValueError("Generation not found.")
+    if not row["video_path"]:
+        raise ValueError("Generation has no registered video path.")
+    method = json.loads(row["settings_json"])["method"]
+    if method not in ("baseline", "proposed"):
+        raise ValueError("Invalid generation method.")
+    return row, ROOT / row["video_path"], method
+
+
+def score_frames(db, generation_id, config):
+    freeze_config(db, config)
+    generation, _, _ = generation_info(db, generation_id)
+    if generation["frame_interval"] != config["frame_interval"]:
+        raise ValueError("Config interval differs from extracted frames.")
+    frames = db.execute("SELECT * FROM image WHERE generation_id=? ORDER BY image_id", (generation_id,)).fetchall()
+    if not frames:
+        raise ValueError("Extract frames first.")
+    import torch
+    import pyiqa
+    metric = pyiqa.create_metric("musiq", device="cpu")
+    metric.eval()
+    state_hash = hashlib.sha256()
+    for name, tensor in sorted(metric.state_dict().items()):
+        tensor = tensor.detach().cpu().contiguous()
+        state_hash.update(name.encode())
+        state_hash.update(str(tensor.dtype).encode())
+        state_hash.update(str(tuple(tensor.shape)).encode())
+        state_hash.update(tensor.numpy().tobytes())
+    provenance = {"pyiqa": version("pyiqa"), "torch": str(torch.__version__),
+                  "python": platform.python_version(), "platform": platform.platform(),
+                  "device": "cpu", "checkpoint_sha256": state_hash.hexdigest(),
+                  "preprocessing": "pyiqa metric image-path input; pinned package defaults"}
+    for previous in db.execute("SELECT config_json, provenance_json FROM scoring_run"):
+        if json.loads(previous["config_json"]).get("experiment_name") == config["experiment_name"]:
+            old = json.loads(previous["provenance_json"])
+            if old != provenance:
+                raise ValueError("Experiment scoring runtime/checkpoint changed; use the original environment or a new experiment name.")
+    with db:
+        cursor = db.execute("INSERT INTO scoring_run(generation_id,config_json,provenance_json) VALUES (?,?,?)", (generation_id,json.dumps(config,sort_keys=True),json.dumps(provenance,sort_keys=True)))
+        run_id = cursor.lastrowid
+        for frame in frames:
+            path = ROOT / frame["image_path"]
+            before = digest(path)
+            with torch.inference_mode():
+                score = float(metric(str(path)).item())
+            if not math.isfinite(score) or digest(path) != before:
+                raise ValueError("Invalid score or image changed during scoring.")
+            db.execute("INSERT INTO image_score VALUES (?,?,?,?)", (run_id,frame["image_id"],before,score))
+            db.execute("UPDATE image SET quality_score=? WHERE image_id=?", (score,frame["image_id"]))
+        db.execute("UPDATE generation SET quality_model='musiq',quality_version=?,quality_threshold=? WHERE generation_id=?", (version("pyiqa"),config["quality_threshold"],generation_id))
+    save_records(db)
+    print("Scoring run:", run_id)
+    return run_id
+
+
+def select_pair(db, scoring_run_id):
+    scoring = db.execute("SELECT * FROM scoring_run WHERE scoring_run_id=?", (scoring_run_id,)).fetchone()
+    if scoring is None:
+        raise ValueError("Scoring run not found.")
+    config = json.loads(scoring["config_json"])
+    frames = db.execute("SELECT image.*, image_score.score, image_score.sha256 FROM image_score JOIN image USING(image_id) WHERE scoring_run_id=? AND score>=? ORDER BY image_id", (scoring_run_id,config["quality_threshold"])).fetchall()
     for frame in frames:
-        print(
-            f"Image {frame['image_id']}: {frame['image_path']} "
-            f"(quality {frame['quality_score']:.2f})"
-        )
-
-    print("\nOpen these images in your image viewer.")
-    print("Rate matching pairs from 1 (poor) to 5 (excellent).")
-    print(f"Possible pairs: {len(frames) * (len(frames) - 1) // 2}")
-    criteria = ("consistency", "visibility", "prompt_adherence", "variation")
-    best = None
-
+        if digest(ROOT / frame["image_path"]) != frame["sha256"]:
+            raise ValueError(f"Image {frame['image_id']} changed since scoring.")
+        print(f"Image {frame['image_id']}: {ROOT / frame['image_path']} ({frame['score']:.2f})")
+    with db:
+        db.execute("INSERT OR IGNORE INTO review_run(generation_id,scoring_run_id) VALUES (?,?)", (scoring["generation_id"],scoring_run_id))
+    completed = {(r[0],r[1]) for r in db.execute("SELECT image_id_1,image_id_2 FROM image_pairs WHERE scoring_run_id=?", (scoring_run_id,))}
+    print(f"Candidate pairs: {len(frames)*(len(frames)-1)//2}; already reviewed: {len(completed)}")
     for first, second in itertools.combinations(frames, 2):
-        print(f"\nImages {first['image_id']} and {second['image_id']}")
+        ids = first["image_id"], second["image_id"]
+        if ids in completed:
+            continue
+        print(f"Images {ids[0]} and {ids[1]}")
         answer = input("Same tattoo? [y/n]: ").strip().lower()
         if answer not in ("y", "n"):
-            raise ValueError("Enter y or n.")
-        if answer == "n":
-            continue
-
-        ratings = [
-            read_number(f"{name.replace('_', ' ')} [1-5]: ", integer=True)
-            for name in criteria
-        ]
-        if any(score < 1 or score > 5 for score in ratings):
-            raise ValueError("Ratings must be between 1 and 5.")
-
-        total = sum(ratings) / 20 * 100
-        if best is None or total > best["total"]:
-            best = {
-                "first": first["image_id"], "second": second["image_id"],
-                "ratings": ratings, "total": total,
-            }
-
-    if best is None:
-        print("No matching pair selected.")
-        return
-
+            raise ValueError("Enter y or n. Completed reviews have been saved.")
+        ratings = [None]*4
+        total = None
+        if answer == "y":
+            ratings = [read_number(f"{k} [1-5]: ", integer=True) for k in CRITERIA]
+            if any(v < 1 or v > 5 for v in ratings):
+                raise ValueError("Ratings must be 1 through 5. Completed reviews have been saved.")
+            weights = config["weights"]
+            total = 100 * sum(weights[k]*v for k,v in zip(CRITERIA,ratings)) / (5*sum(weights.values()))
+        with db:
+            db.execute("INSERT INTO image_pairs(scoring_run_id,generation_id,image_id_1,image_id_2,same_tattoo,consistency,visibility,prompt_adherence,variation,total_score) VALUES (?,?,?,?,?,?,?,?,?,?)", (scoring_run_id,scoring["generation_id"],*ids,int(answer=="y"),*ratings,total))
+        save_records(db)
+    best = db.execute("SELECT * FROM image_pairs WHERE scoring_run_id=? AND same_tattoo=1 ORDER BY total_score DESC,image_id_1,image_id_2 LIMIT 1", (scoring_run_id,)).fetchone()
     with db:
-        db.execute(
-            """INSERT INTO image_pairs
-               (generation_id, image_id_1, image_id_2, same_tattoo,
-                consistency, visibility, prompt_adherence, variation, total_score)
-               VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?)""",
-            (
-                generation_id, best["first"], best["second"],
-                *best["ratings"], best["total"],
-            ),
-        )
+        db.execute("UPDATE review_run SET status='complete',selected_pair_id=? WHERE scoring_run_id=?", (best["pair_id"] if best else None,scoring_run_id))
     save_records(db)
-    print(
-        f"\nSelected images {best['first']} and {best['second']}. "
-        f"Pair score: {best['total']:.1f}"
-    )
+    print(f"Selected images {best['image_id_1']} and {best['image_id_2']}: {best['total_score']:.1f}" if best else "Review complete. No matching pair selected.")
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", choices=("register", "extract", "score", "review", "run"))
+    parser.add_argument("--generation-id", type=int)
+    parser.add_argument("--scoring-run-id", type=int)
+    parser.add_argument("--config", type=Path, default=ROOT / "config/evaluation.json")
+    args = parser.parse_args()
     db = connect()
     try:
-        interval = read_number("Seconds between frames [1]: ", default=1)
-        if interval <= 0:
-            raise ValueError("Interval must be positive.")
-
-        print("Loading MUSIQ. First use downloads pretrained weights.")
-        metric = pyiqa.create_metric("musiq", device="cpu")
-        metric.eval()
-
-        generation_id, video, method = register_video(db)
-        extract_and_score(
-            db, generation_id, video, method, interval, metric
-        )
-
-        threshold = read_number("Minimum MUSIQ quality score: ")
-        with db:
-            db.execute(
-                "UPDATE generation SET quality_threshold = ? WHERE generation_id = ?",
-                (threshold, generation_id),
-            )
-        save_records(db)
-        select_pair(db, generation_id, threshold)
+        if args.command == "review":
+            if args.scoring_run_id is None:
+                raise ValueError("review requires --scoring-run-id")
+            select_pair(db,args.scoring_run_id)
+            return
+        if args.command == "register":
+            register_video(db)
+            return
+        config = load_config(args.config)
+        freeze_config(db,config)
+        gid = args.generation_id
+        if gid is None:
+            if args.command != "run":
+                raise ValueError("This command requires --generation-id")
+            gid, _, _ = register_video(db)
+        row, video, method = generation_info(db,gid)
+        has_frames = db.execute("SELECT 1 FROM image WHERE generation_id=?", (gid,)).fetchone()
+        if args.command == "extract" and has_frames:
+            raise ValueError("Frames already extracted; use score or review.")
+        if args.command == "extract" or (args.command == "run" and not has_frames):
+            extract_frames(db,gid,video,method,config["frame_interval"])
+        if args.command in ("score", "run"):
+            existing = db.execute("SELECT scoring_run_id FROM scoring_run WHERE generation_id=? AND config_json=? ORDER BY scoring_run_id DESC LIMIT 1", (gid,json.dumps(config,sort_keys=True))).fetchone()
+            run_id = existing[0] if existing and args.command == "run" else score_frames(db,gid,config)
+            if args.command == "run":
+                select_pair(db,run_id)
     finally:
         db.close()
 
@@ -271,6 +335,6 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\nCancelled. Previously committed records remain saved.")
+        print("Cancelled. Completed stages and reviews remain saved.")
     except (ValueError, OSError, sqlite3.Error, RuntimeError) as error:
         raise SystemExit(str(error))

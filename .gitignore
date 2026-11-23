@@ -3,6 +3,7 @@
 SQLite/*.db
 SQLite/*.db-shm
 SQLite/*.db-wal
+SQLite/*.db.bak
 
 # Generated videos
 data/videos/baseline/*

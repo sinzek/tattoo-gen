@@ -1,6 +1,6 @@
 # Pair review rubric v1
 
-These are subjective ratings, not automated identity verification. Use the same reviewer(s), criteria and fixed weights for baseline and revised prompts. Initial weights are equal; agree on the rubric before evaluating held-out outputs. Manual judgments and the learned quality model can introduce bias.
+These are subjective ratings, not automated identity verification. Use consistent review practice, criteria and fixed weights for baseline and revised prompts. Initial weights are equal; agree on the rubric before evaluating held-out outputs. Manual judgments and the learned quality model can introduce bias.
 
 ## Automatic gate
 
@@ -27,7 +27,7 @@ Total = 100 * sum(weight * rating) / (5 * sum(weights)). The possible range is 2
 
 ## Provenance
 
-Each immutable scoring run records pyiqa version, a SHA-256 digest of the loaded model state, runtime/device details, image hashes and scores. image.quality_score is the latest score for convenience; selection always uses an explicit scoring run. Scores are comparable only when using the same metric, weights/checkpoint and preprocessing. First use downloads weights. Review rejects missing or modified images. Selected frames are copies, preserving original data.
+Each immutable scoring run records pyiqa version, a SHA-256 digest of the loaded model state, runtime/device details, image hashes and scores. image.quality_score is the latest score for convenience; selection always uses an explicit scoring run. Scores are comparable only when using the same metric, weights/checkpoint and preprocessing. First use downloads weights. Review rejects missing or modified images. Selected pairs reference the original frames; files are not copied.
 
 Sources:
 - https://github.com/chaofengc/IQA-PyTorch (documented create_metric and inference API)

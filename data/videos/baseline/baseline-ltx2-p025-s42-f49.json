@@ -1,0 +1,42 @@
+{
+  "prompt_id": 25,
+  "prompt_text": "Generate a video of a feminine-presenting adult aged 18-29 with very light skin and a large build, wearing a low-back tank top exposing the tattooed upper back and shorts. A healed, small, full-color geometric tattoo depicting lotus is located on the exposed upper back. The subject is sitting and remains still in a studio with a simple background under dim lighting. Capture a close-up back view with focus primarily on the tattoo. Keep the entire tattoo unobstructed and inside the frame throughout. Keep clothing clear of the design, orient the tattooed surface toward the camera, and retain enough detail for tattoo recognition even in dim or full-body views.",
+  "seed": 42,
+  "study_phase": "baseline",
+  "prompt_set": "dataset",
+  "model_version": "Lightricks/LTX-2@dfcc2108383fe1aaa0584bdf55d368a4bdadd90c",
+  "method": "baseline",
+  "model_name": "LTX-2",
+  "video_sha256": "85b6341a8e386d91a866fc6377a8fbacf7319a5c1db6ec71270edaa4f6b52d27",
+  "settings": {
+    "height": 512,
+    "width": 768,
+    "fps": 24,
+    "steps": 40,
+    "guidance": 3.0,
+    "audio_guidance": 7.0,
+    "stg_layers": [
+      29
+    ],
+    "stg_scale": 1.0,
+    "rescale": 0.7,
+    "modality_scale": 3.0,
+    "negative_prompt": "",
+    "prompt_enhancement": false,
+    "pipeline": "native_one_stage_fp8",
+    "precision": "bf16",
+    "quantization": "fp8-scaled-mm",
+    "offloading": "text_encoder_disk_transformer_resident",
+    "checkpoint_file": "ltx-2-19b-dev-fp8.safetensors",
+    "code_revision": "e98f6d927d83c92ef2be6aec76c8440b19306e39",
+    "encoder_repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+    "encoder_revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+    "frames": 49,
+    "actual_frames": 49,
+    "generation_and_export_seconds": 453.1742365379996,
+    "gpu": "NVIDIA L4",
+    "peak_allocated_gib": 21.435256481170654,
+    "torch": "2.9.1+cu128",
+    "session_setup_seconds": 177.46251632300005
+  }
+}

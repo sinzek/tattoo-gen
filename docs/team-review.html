@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TattooGen pair review</title>
+<style>
+:root { color-scheme: light; --ink:#1c2926; --paper:#f4f1e9; --line:#b2bdb0; --accent:#245a4c; font: 16px/1.5 "Avenir Next", "Trebuchet MS", sans-serif; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); }
+main { max-width:1150px; margin:auto; padding:24px clamp(16px, 4vw, 54px) 48px; }
+header, nav, .actions { display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
+header { border-bottom:2px solid var(--ink); margin-bottom:16px; }
+h1 { font: 500 clamp(2rem, 5vw, 3.45rem)/1 Georgia, serif; margin:0 0 16px; }
+nav { margin:16px 0; }
+input, select, button, textarea { font:inherit; color:inherit; border:1px solid var(--line); background:white; padding:7px 10px; border-radius:4px; }
+button { cursor:pointer; }
+button:disabled { opacity:.45; cursor:default; }
+button.primary { background:var(--accent); border-color:var(--accent); color:white; }
+:focus-visible { outline:3px solid #86571c; outline-offset:2px; }
+.prompt { border-left:4px solid var(--accent); padding-left:14px; margin:14px 0; }
+.frames, .scores { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+figure { margin:0; }
+figure a { display:block; background:var(--ink); }
+img { display:block; width:100%; aspect-ratio:3/2; object-fit:contain; }
+figcaption { margin:4px 0 12px; font-size:.9rem; }
+fieldset { border:1px solid var(--line); margin:12px 0; padding:12px 16px; min-width:0; }
+.choice { display:inline-flex; gap:6px; margin-right:18px; }
+.scores label { display:grid; grid-template-columns:1fr auto; gap:4px 12px; align-items:start; border-bottom:1px solid var(--line); padding-bottom:8px; }
+.scores small { grid-column:1 / -1; }
+textarea { display:block; width:100%; margin:4px 0 12px; }
+#status { min-height:1.5em; }
+@media (max-width:560px) { .scores { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+<header><h1>TattooGen pair review</h1><p id="progress"></p></header>
+<p>Review each pair independently. Open either frame for a closer look. If you cannot verify the same tattoo in both frames, choose No and give a short reason.</p>
+<label>Your name <input id="name" type="text" maxlength="80" autocomplete="name"></label>
+<nav aria-label="Pair navigation">
+  <button id="prev" type="button">Previous</button>
+  <label>Pair <select id="pair"></select></label>
+  <button id="next" type="button">Next</button>
+</nav>
+<p class="prompt"><strong>Generation prompt</strong><br><span id="prompt"></span></p>
+<section class="frames" aria-label="Candidate frames">
+  <figure><a id="link-a" target="_blank" rel="noopener"><img id="frame-a" alt="Candidate frame A"></a><figcaption>Frame A</figcaption></figure>
+  <figure><a id="link-b" target="_blank" rel="noopener"><img id="frame-b" alt="Candidate frame B"></a><figcaption>Frame B</figcaption></figure>
+</section>
+<fieldset id="identity">
+  <legend>Can you verify the same tattoo in both frames?</legend>
+  <label class="choice"><input type="radio" name="identity" value="yes"> Yes</label>
+  <label class="choice"><input type="radio" name="identity" value="no"> No or uncertain</label>
+</fieldset>
+<fieldset id="rubric" hidden>
+  <legend>Score each criterion from 1 to 5. Use 2 and 4 for intermediate judgments.</legend>
+  <div class="scores" id="scores"></div>
+</fieldset>
+<label><span id="notes-label">Notes (optional)</span><textarea id="notes" rows="2"></textarea></label>
+<div class="actions">
+  <button id="resume" type="button">Load saved file</button>
+  <input id="file" type="file" accept=".json,application/json" hidden>
+  <button id="draft" type="button">Save progress file</button>
+  <button id="submit" type="button" class="primary">Download completed ratings</button>
+</div>
+<p id="status" role="status"></p>
+</main>
+<script type="application/json" id="packet">__PACKET_DATA__</script>
+<script>
+"use strict";
+const get = id => document.getElementById(id);
+const packet = JSON.parse(get("packet").textContent);
+const criteria = [
+  ["consistency", "Consistency", "1 · Major changes", "3 · Minor distortions", "5 · Same design and placement"],
+  ["visibility", "Visibility", "1 · Obscured or tiny", "3 · Partly clear", "5 · Clear in both frames"],
+  ["prompt_adherence", "Prompt adherence", "1 · Major attributes missing", "3 · Several attributes match", "5 · Attributes match in both"],
+  ["variation", "Useful variation", "1 · Near-identical views", "3 · Some useful difference", "5 · Substantial useful difference"]
+];
+const state = { packet: packet.id, reviewer: "", ratings: {} };
+const storageKey = "tattoo-review:" + packet.id;
+let index = 0;
+function restore(data) {
+  if (data.packet !== packet.id || typeof data.reviewer !== "string" ||
+      !data.ratings || typeof data.ratings !== "object" || Array.isArray(data.ratings)) {
+    throw new Error("Choose a saved ratings file from this packet.");
+  }
+  for (const [id, entry] of Object.entries(data.ratings)) {
+    if (!packet.items.some(item => item.id === id) || !entry ||
+        ![true, false, null].includes(entry.same_tattoo) ||
+        typeof entry.notes !== "string" || !entry.scores || typeof entry.scores !== "object" ||
+        Array.isArray(entry.scores)) {
+      throw new Error("The saved file contains an invalid pair rating.");
+    }
+  }
+  state.reviewer = data.reviewer;
+  state.ratings = data.ratings;
+}
+try {
+  const saved = localStorage.getItem(storageKey);
+  if (saved) restore(JSON.parse(saved));
+} catch {
+  get("status").textContent = "Use Save progress file to keep a copy of your ratings.";
+}
+get("name").value = state.reviewer;
+for (const item of packet.items) get("pair").add(new Option(item.id, item.id));
+for (const [key, title, ...anchors] of criteria) {
+  const label = document.createElement("label");
+  const select = document.createElement("select");
+  const help = document.createElement("small");
+  label.append(title, select, help);
+  help.id = key + "-anchors";
+  help.textContent = anchors.join("  /  ");
+  select.setAttribute("aria-describedby", help.id);
+  select.id = key;
+  select.add(new Option("—", ""));
+  for (let score = 1; score <= 5; score++) select.add(new Option(score, score));
+  select.addEventListener("change", save);
+  get("scores").append(label);
+}
+function complete(entry) {
+  if (entry?.same_tattoo === false) return Boolean(entry.notes.trim());
+  return entry?.same_tattoo === true && criteria.every(([key]) =>
+    Number.isInteger(entry.scores[key]) && entry.scores[key] >= 1 && entry.scores[key] <= 5);
+}
+function updateProgress() {
+  const done = packet.items.filter(item => complete(state.ratings[item.id])).length;
+  get("progress").textContent = done + " of " + packet.items.length + " pairs complete";
+  get("submit").disabled = done !== packet.items.length || !state.reviewer.trim();
+}
+function updateRubric() {
+  const identity = document.querySelector('input[name="identity"]:checked')?.value;
+  get("rubric").hidden = identity !== "yes";
+  get("notes-label").textContent = identity === "no" ? "Reason (required)" : "Notes (optional)";
+}
+function show() {
+  const item = packet.items[index];
+  const entry = state.ratings[item.id];
+  get("pair").value = item.id;
+  get("prompt").textContent = item.prompt;
+  for (const [i, suffix] of ["a", "b"].entries()) {
+    get("frame-" + suffix).src = item.images[i];
+    get("link-" + suffix).href = item.images[i];
+  }
+  for (const radio of document.querySelectorAll('input[name="identity"]')) {
+    radio.checked = entry?.same_tattoo === (radio.value === "yes");
+  }
+  for (const [key] of criteria) get(key).value = entry?.scores[key] ?? "";
+  get("notes").value = entry?.notes ?? "";
+  get("prev").disabled = index === 0;
+  get("next").disabled = index === packet.items.length - 1;
+  updateRubric();
+  updateProgress();
+}
+function save() {
+  state.reviewer = get("name").value.trim();
+  const identity = document.querySelector('input[name="identity"]:checked')?.value;
+  const scores = {};
+  for (const [key] of criteria) {
+    if (identity === "yes" && get(key).value) scores[key] = Number(get(key).value);
+    if (identity !== "yes") get(key).value = "";
+  }
+  state.ratings[packet.items[index].id] = {
+    same_tattoo: identity ? identity === "yes" : null, scores, notes: get("notes").value
+  };
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(state));
+  } catch {
+    get("status").textContent = "Browser storage is unavailable. Save a progress file before closing.";
+  }
+  updateRubric();
+  updateProgress();
+}
+function download(final) {
+  save();
+  const url = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], {type:"application/json"}));
+  const link = document.createElement("a");
+  link.href = url;
+  const name = state.reviewer.replace(/[^a-zA-Z0-9_-]+/g, "-") || "reviewer";
+  link.download = name + (final ? "-ratings.json" : "-progress.json");
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  get("status").textContent = final ? "Send your ratings file privately to the coordinator." : "Progress file downloaded.";
+}
+get("prev").onclick = () => { index--; show(); };
+get("next").onclick = () => { index++; show(); };
+get("pair").onchange = event => { index = event.target.selectedIndex; show(); };
+get("identity").onchange = save;
+get("name").oninput = get("notes").oninput = save;
+get("draft").onclick = () => download(false);
+get("submit").onclick = () => download(true);
+get("resume").onclick = () => get("file").click();
+get("file").onchange = async event => {
+  const [file] = event.target.files;
+  if (!file) return;
+  try {
+    restore(JSON.parse(await file.text()));
+    get("name").value = state.reviewer;
+    index = Math.max(0, packet.items.findIndex(item => !complete(state.ratings[item.id])));
+    show();
+    save();
+    get("status").textContent = "Saved ratings loaded.";
+  } catch (error) {
+    get("status").textContent = error.message;
+  } finally {
+    event.target.value = "";
+  }
+};
+index = Math.max(0, packet.items.findIndex(item => !complete(state.ratings[item.id])));
+show();
+</script>
+</body>
+</html>

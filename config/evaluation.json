@@ -1,0 +1,9 @@
+{
+  "experiment_name": "pilot",
+  "quality_threshold": null,
+  "threshold_rationale": "Set a cutoff using pilot images before evaluation.",
+  "frame_interval": 1.0,
+  "metric": "musiq",
+  "device": "cpu",
+  "weights": {"consistency": 1, "visibility": 1, "prompt_adherence": 1, "variation": 1}
+}

@@ -1,14 +1,26 @@
+
 # Working SQLite database
-database/tattoo_dataset.db
-database/tattoo_dataset.db-shm
-database/tattoo_dataset.db-wal
+SQLite/*.db
+SQLite/*.db-shm
+SQLite/*.db-wal
+SQLite/*.db.bak
 
 # Generated videos
 data/videos/baseline/*
 !data/videos/baseline/.gitkeep
+!data/videos/baseline/baseline-ltx2-*.mp4
+!data/videos/baseline/baseline-ltx2-*.json
 
 data/videos/proposed/*
 !data/videos/proposed/.gitkeep
+data/videos/duration_test/
+data/videos/model_selection/*
+!data/videos/model_selection/pilot-*.mp4
+!data/videos/model_selection/pilot-*.json
+
+# Keep bulk dataset exports local.
+data/pairs/*
+!data/pairs/model_selection/
 
 # Extracted images
 data/images/baseline/*
@@ -39,3 +51,6 @@ desktop.ini
 venv/
 env/
 .env
+
+# Local team-review packets, submissions and reports
+data/review/

@@ -1,0 +1,14 @@
+{
+  "experiment_name": "ltx2-baseline-raw-musiq",
+  "quality_threshold": null,
+  "threshold_rationale": "Record all sampled frame scores before calibrating and locking a cutoff for team review.",
+  "frame_interval": 0.75,
+  "metric": "musiq",
+  "device": "cpu",
+  "weights": {
+    "consistency": 1,
+    "visibility": 1,
+    "prompt_adherence": 1,
+    "variation": 1
+  }
+}

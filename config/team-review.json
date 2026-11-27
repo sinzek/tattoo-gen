@@ -1,0 +1,10 @@
+{
+  "experiment_name": "ltx2-team-review-v1",
+  "quality_threshold": 58,
+  "threshold_rationale": "On the duration-test development clips, 58 admitted two of three clips at both tested lengths. A cutoff of 65 admitted none. Use 58 for both study phases.",
+  "frame_interval": 0.75,
+  "metric": "musiq",
+  "device": "cpu",
+  "weights": {"consistency": 1, "visibility": 1, "prompt_adherence": 1, "variation": 1},
+  "team_review": {"reviewers": 3, "identity_rule": "unanimous", "rating_rule": "median"}
+}

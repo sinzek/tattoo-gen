@@ -1,0 +1,55 @@
+{
+  "method": "baseline",
+  "prompt_set": "model_selection",
+  "prompt_id": 1,
+  "prompt_text": "Generate a video of a masculine-presenting young adult with very light skin and an athletic build, wearing a tank top and shorts. A fresh, medium-sized, full-color traditional rose tattoo is located on the upper arm. The subject is standing still in a brightly lit studio while the camera captures a close-up side view focused on the fully visible tattoo.",
+  "model_name": "LTX-2",
+  "model_version": "Lightricks/LTX-2@dfcc2108383fe1aaa0584bdf55d368a4bdadd90c",
+  "seed": 42,
+  "video_sha256": "540c8964e4ca1b37341bf36b22b078f047ca133499b4f542fd841a0e80ca19eb",
+  "settings": {
+    "height": 512,
+    "width": 768,
+    "frames": 121,
+    "fps": 24,
+    "steps": 40,
+    "guidance": 3,
+    "offloading": "text_encoder_disk_transformer_resident",
+    "precision": "bf16",
+    "quantization": "fp8-scaled-mm",
+    "prompt_enhancement": false,
+    "pipeline": "native_one_stage_fp8",
+    "negative_prompt": "",
+    "checkpoint_file": "ltx-2-19b-dev-fp8.safetensors",
+    "audio_guidance": 7,
+    "video_stg_guidance": 1,
+    "audio_stg_guidance": 1,
+    "video_rescale": 0.7,
+    "audio_rescale": 0.7,
+    "a2v_guidance": 3,
+    "v2a_guidance": 3,
+    "actual": {
+      "width": 768,
+      "height": 512,
+      "frames": 121,
+      "fps": 24,
+      "duration_seconds": 5.041666666666667
+    },
+    "gpu": "NVIDIA L4, 23034 MiB, 580.82.07",
+    "code": {
+      "repo": "Lightricks/LTX-2",
+      "commit": "e98f6d927d83c92ef2be6aec76c8440b19306e39"
+    },
+    "text_encoder": {
+      "repo": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+      "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482"
+    },
+    "started_utc": "2026-10-19T22:27:43Z",
+    "attempt_wall_seconds": 826.6877080279992,
+    "download_wall_seconds": 187.62487611999995,
+    "sampled_device_vram_gib": 21.765625,
+    "load_and_generation_seconds": 814.6004141120002,
+    "peak_allocated_gib": 21.43328332901001,
+    "peak_reserved_gib": 21.505859375
+  }
+}

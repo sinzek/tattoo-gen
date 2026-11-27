@@ -1,0 +1,27 @@
+{
+  "method": "baseline",
+  "prompt_set": "model_selection",
+  "prompt_id": 1,
+  "prompt_text": "Generate a video of a masculine-presenting young adult with very light skin and an athletic build, wearing a tank top and shorts. A fresh, medium-sized, full-color traditional rose tattoo is located on the upper arm. The subject is standing still in a brightly lit studio while the camera captures a close-up side view focused on the fully visible tattoo.",
+  "model_name": "Mochi 1",
+  "model_version": "genmo/mochi-1-preview@cd1d0fe89aa8382fcd9ae760bc3d7afe6183579f",
+  "seed": 42,
+  "video_sha256": "f6530f1231620a028b6b940a1365e3a4237a80d2188bdaf26f7ea4e223491e64",
+  "settings": {
+    "height": 384,
+    "width": 640,
+    "num_frames": 61,
+    "num_inference_steps": 20,
+    "guidance_scale": 4.5,
+    "fps": 30,
+    "actual_frames": 61,
+    "precision": "bf16",
+    "offload": "transformer_block_2",
+    "gpu": "NVIDIA L4",
+    "peak_allocated_gib": 17.121025562286377,
+    "setup_seconds": 61.82740416200022,
+    "generation_and_export_seconds": 592.290626432,
+    "torch": "2.14.1+cu130",
+    "diffusers": "0.43.0"
+  }
+}

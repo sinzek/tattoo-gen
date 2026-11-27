@@ -1,0 +1,14 @@
+{
+  "experiment_name": "ltx2-duration-test",
+  "quality_threshold": 65,
+  "threshold_rationale": "Exploratory cutoff from the LTX-2 model-selection pilot, applied consistently to both clip lengths. Re-evaluate before freezing the full study settings.",
+  "frame_interval": 0.75,
+  "metric": "musiq",
+  "device": "cpu",
+  "weights": {
+    "consistency": 1,
+    "visibility": 1,
+    "prompt_adherence": 1,
+    "variation": 1
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "prompt_id": 10,
+  "prompt_text": "Generate a video of a masculine-presenting adult aged 60+ with tan skin and a slim build, wearing a tank top with straps clear of the tattoo and pants. A fresh, medium, black-and-gray linework tattoo depicting mountain range is located on the outer shoulder. The subject is standing and slowly rotates the torso through a small angle in a studio with a simple background under bright lighting. Capture a close-up oblique view with focus primarily on the tattoo. Let a hand briefly overlap a small edge of the tattoo, leaving most of the design visible and identifiable. Keep clothing clear of the design, orient the tattooed surface toward the camera, and retain enough detail for tattoo recognition even in dim or full-body views.",
+  "seed": 42,
+  "study_phase": "baseline",
+  "prompt_set": "dataset",
+  "model_version": "Lightricks/LTX-2@dfcc2108383fe1aaa0584bdf55d368a4bdadd90c",
+  "method": "baseline",
+  "model_name": "LTX-2",
+  "video_sha256": "5a3092c9752fd85380a1a83f9845cd74db9a70c71858bf380d3d8e0b43d16cfb",
+  "settings": {
+    "height": 512,
+    "width": 768,
+    "fps": 24,
+    "steps": 40,
+    "guidance": 3.0,
+    "audio_guidance": 7.0,
+    "stg_layers": [
+      29
+    ],
+    "stg_scale": 1.0,
+    "rescale": 0.7,
+    "modality_scale": 3.0,
+    "negative_prompt": "",
+    "prompt_enhancement": false,
+    "pipeline": "native_one_stage_fp8",
+    "precision": "bf16",
+    "quantization": "fp8-scaled-mm",
+    "offloading": "text_encoder_disk_transformer_resident",
+    "checkpoint_file": "ltx-2-19b-dev-fp8.safetensors",
+    "code_revision": "e98f6d927d83c92ef2be6aec76c8440b19306e39",
+    "encoder_repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+    "encoder_revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+    "frames": 49,
+    "actual_frames": 49,
+    "generation_and_export_seconds": 442.45683566499974,
+    "gpu": "NVIDIA L4",
+    "peak_allocated_gib": 21.435134410858154,
+    "torch": "2.9.1+cu128",
+    "session_setup_seconds": 177.46251632300005
+  }
+}

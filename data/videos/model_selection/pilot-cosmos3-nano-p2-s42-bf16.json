@@ -1,0 +1,30 @@
+{
+  "method": "baseline",
+  "prompt_set": "model_selection",
+  "prompt_id": 2,
+  "prompt_text": "Generate a video of a feminine-presenting adult with light skin and a slim build, wearing a short-sleeved shirt and pants. A healed, large, monochrome realism tattoo of a wolf is located on the forearm. The subject is sitting indoors and gently moving the tattooed arm while the camera records a medium-distance front view. Keep part of the tattoo naturally obstructed but identifiable, with focus primarily on the subject.",
+  "model_name": "Cosmos3 Nano",
+  "model_version": "nvidia/Cosmos3-Nano@45666784803b3a7ad577e0def405f9afcc3bddb2",
+  "seed": 42,
+  "video_sha256": "f8b4d16a2eb3bd01df85a34b5d8b1a223f96a985ef8331dde9a4237a889bd32d",
+  "settings": {
+    "height": 320,
+    "width": 576,
+    "num_frames": 49,
+    "num_inference_steps": 10,
+    "guidance_scale": 6.0,
+    "fps": 24.0,
+    "actual_frames": 49,
+    "precision": "bf16",
+    "offload": "transformer_block_2",
+    "prompt_upsampled": false,
+    "flow_shift": 10.0,
+    "guardrail_enabled": true,
+    "gpu": "NVIDIA L4",
+    "peak_allocated_gib": 5.525644779205322,
+    "setup_seconds": 242.53785566000002,
+    "generation_and_export_seconds": 641.9802690030001,
+    "torch": "2.14.1+cu130",
+    "diffusers": "0.43.0"
+  }
+}

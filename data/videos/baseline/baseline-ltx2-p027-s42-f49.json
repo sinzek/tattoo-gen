@@ -1,0 +1,42 @@
+{
+  "prompt_id": 27,
+  "prompt_text": "Generate a video of a masculine-presenting adult aged 40-49 with medium skin and a average build, wearing a short-sleeved shirt and shorts. A fresh, large, black-and-gray blackwork tattoo depicting anchor is located on the outer calf. The subject is standing and gently moves the tattooed limb in an outdoor setting under normal lighting. Capture a medium oblique view with focus primarily on the tattoo. Keep the entire tattoo unobstructed and inside the frame throughout. Keep clothing clear of the design, orient the tattooed surface toward the camera, and retain enough detail for tattoo recognition even in dim or full-body views.",
+  "seed": 42,
+  "study_phase": "baseline",
+  "prompt_set": "dataset",
+  "model_version": "Lightricks/LTX-2@dfcc2108383fe1aaa0584bdf55d368a4bdadd90c",
+  "method": "baseline",
+  "model_name": "LTX-2",
+  "video_sha256": "cea1202b96b5f1f81a19ab7f3b5ce0cea1e76009ef26a53fc4e180f19e0bd46e",
+  "settings": {
+    "height": 512,
+    "width": 768,
+    "fps": 24,
+    "steps": 40,
+    "guidance": 3.0,
+    "audio_guidance": 7.0,
+    "stg_layers": [
+      29
+    ],
+    "stg_scale": 1.0,
+    "rescale": 0.7,
+    "modality_scale": 3.0,
+    "negative_prompt": "",
+    "prompt_enhancement": false,
+    "pipeline": "native_one_stage_fp8",
+    "precision": "bf16",
+    "quantization": "fp8-scaled-mm",
+    "offloading": "text_encoder_disk_transformer_resident",
+    "checkpoint_file": "ltx-2-19b-dev-fp8.safetensors",
+    "code_revision": "e98f6d927d83c92ef2be6aec76c8440b19306e39",
+    "encoder_repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+    "encoder_revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+    "frames": 49,
+    "actual_frames": 49,
+    "generation_and_export_seconds": 456.21162987999924,
+    "gpu": "NVIDIA L4",
+    "peak_allocated_gib": 21.437087535858154,
+    "torch": "2.9.1+cu128",
+    "session_setup_seconds": 177.46251632300005
+  }
+}

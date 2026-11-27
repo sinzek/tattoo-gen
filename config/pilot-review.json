@@ -1,0 +1,10 @@
+{
+  "experiment_name": "model-selection-pilot",
+  "quality_threshold": 65.0,
+  "threshold_rationale": "Exploratory cutoff based on six one-second samples from the archived LTX-2 clip. It retained the three frames with the full tattoo in view. Validate on a broader development sample before using a cutoff in the formal experiment.",
+  "reviewer": "Codex-assisted visual review. Independent human review pending.",
+  "frame_interval": 1.0,
+  "metric": "musiq",
+  "device": "cpu",
+  "weights": {"consistency": 1, "visibility": 1, "prompt_adherence": 1, "variation": 1}
+}
